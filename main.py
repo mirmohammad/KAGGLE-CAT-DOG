@@ -1,13 +1,14 @@
 import numpy as np
 import pandas as pd
 import torch
+import torch.nn as nn
 from torch.optim import lr_scheduler
 from torch.utils.data import DataLoader, SubsetRandomSampler
 from torchvision import datasets
 from torchvision import transforms
 from tqdm import tqdm
 
-from CNND import CNND
+from CNNC import CNNC
 from FocalLoss import FocalLoss
 from MyDataSet import MyDataSet
 
@@ -23,9 +24,9 @@ num_workers = batch_size // 8
 validation_split = .2
 random_seed = 42
 
-epochs = 150
+epochs = 80
 learning_rate = 1e-2
-step_size = 50
+step_size = 40
 gamma = 0.1
 
 # Set device
@@ -66,15 +67,15 @@ test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num
 
 # Set the model
 
-model = CNND(num_classes=classes)
+model = CNNC(num_classes=classes)
 
 if cuda:
     model = model.cuda()
 
 # Loss and optimizer
 
-# criterion = nn.CrossEntropyLoss()
-criterion = FocalLoss()
+criterion = nn.CrossEntropyLoss()
+# criterion = FocalLoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 scheduler = lr_scheduler.StepLR(optimizer, step_size=step_size, gamma=gamma)
 
